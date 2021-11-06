@@ -232,6 +232,11 @@
     Operator versioning
   </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#automatic-cluster-version-label-ocp-packagemanifest-only">
+    Automatic Cluster Version Label (OCP) - packagemanifest only
+  </a>
+</li>
 </ul>
 </nav>
 </li>
@@ -253,6 +258,11 @@
 <li class="md-nav__item">
 <a class="md-nav__link" href="../self-merge-updates/" title="How do i deploy operator faster?">
       How do i deploy operator faster?
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../packaging-required-criteria-ocp/" title="OKD/OpenShift Catalogs criteria and options">
+      OKD/OpenShift Catalogs criteria and options
     </a>
 </li>
 </ul>
@@ -309,6 +319,11 @@
     Operator versioning
   </a>
 </li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#automatic-cluster-version-label-ocp-packagemanifest-only">
+    Automatic Cluster Version Label (OCP) - packagemanifest only
+  </a>
+</li>
 </ul>
 </nav>
 </div>
@@ -326,7 +341,7 @@
 <p>One can create or modify <code>ci.yaml</code> file with new operator version. This operation can be done in the same PR with other operator changes. </p>
 </div>
 <h2 id="reviewers">Reviewers</h2>
-<p>If you want to accelerate publishing your changes, consider adding yourself and others you trust to the reviewers list. If the author of PR will be in that list, chnages she/he made will be taken as authorized changes (label <code>authorized-changes</code> will be set). This will be the indicator for our pipeline that the PR is ready to merged automatically. </p>
+<p>If you want to accelerate publishing your changes, consider adding yourself and others you trust to the reviewers list. If the author of PR will be in that list, changes she/he made will be taken as authorized changes (label <code>authorized-changes</code> will be set). This will be the indicator for our pipeline that the PR is ready to merged automatically. </p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If author of PR is not in <code>reviewers</code> list, PR will not be merged automatically. For automatic merging PR needs to have <code>authorized-changes</code> label set. Manually or by pipeline finding reviewer in <code>ci.yaml</code> on <code>main</code> branch. For security reasons we are not checking reviewers from a fork.</p>
@@ -356,6 +371,16 @@ reviewers:
 ---
 <span class="c1"># Use `replaces-mode` or `semver-mode`.</span>
 updateGraph: replaces-mode
+</code></pre></div>
+<h2 id="automatic-cluster-version-label-ocp-packagemanifest-only">Automatic Cluster Version Label (OCP) - packagemanifest only</h2>
+<p>Starting OCP v4.9 (based on k8s 1.22) some old API were deprecated (<a href="https://kubernetes.io/docs/reference/using-api/deprecation-guide/#v1-22">Deprecated API Migration Guide from v1.22</a>, <a href="../packaging-required-criteria-ocp/">OKD/OpenShift Catalogs criteria and options</a>). User can set <code>com.redhat.openshift.versions: &lt;versions&gt;</code> in its bundle annotations.yaml file to limit specific operator version to be visible on certain cluster. Following example will install operator bundle for versions <code>v4.6, v4.7, v4.8</code></p>
+<div class="codehilite"><pre><span></span><code>$ cat &lt;path-to-operators&gt;/&lt;name&gt;/&lt;version/metadata&gt;/annotations.yaml
+annotations:
+    com.redhat.openshift.versions: <span class="s2">"v4.6-v4.8"</span>
+</code></pre></div>
+<p>For packagemanifest format it is not possible and community-operators pipeline can automatically set such label to the bundle. User have to allow it by putting <code>packagemanifestClusterVersionLabel: auto</code> in <code>ci.yaml</code> file</p>
+<div class="codehilite"><pre><span></span><code>$ cat &lt;path-to-operator&gt;/ci.yaml
+packagemanifestClusterVersionLabel: auto
 </code></pre></div>
 </article>
 </div>
